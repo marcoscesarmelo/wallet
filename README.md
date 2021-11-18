@@ -174,7 +174,6 @@ Obviamente, ambas as contas precisam estar cadastradas e a conta origem, autenti
 (*) GET na URL localhost:8080/operation/timeline/{id-conta} \
 Parâmetros de Header: \
 Content-Type: application/json \
-amount: {valor numerico} \
 Authorization: "Bearer " + &lt;token&gt; \
 Exemplo de Resposta: 
 ```json
@@ -212,8 +211,28 @@ Exemplo de Resposta:
 
 # E o Timeline Service nesta história?
 De maneira assíncrona, cada transação feita é incluída em uma fila (publisher - serviço wallet) e há um serviço batch que obtém estas mensagens e persiste no banco de dados, para posterior consulta na endpoint /timeline.
+Por isto, além da API, se fez tão importante o serviço batch para gerar insumos à timeline.
 
-## Por isto, além da API, se fez tão importante o serviço batch para gerar insumos à timeline.
+# Alguns Testes Integrados:
+Utilizando-se de um framework nativo para o Spring, o MockMVC, foram desenvolvidos três cenários (2 positivos e 1 negativo). \
+Para invocar, por exemplo, via Maven, no diretório raíz do projeto wallet:
+```DOS
+mvnw clean test
+```
+Espera-se um resultado parecido com o abaixo: \
+```DOS
+[INFO]
+[INFO] Results:
+[INFO]
+[INFO] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0
+[INFO]
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD SUCCESS
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time:  51.621 s
+[INFO] Finished at: 2021-11-18T13:33:37-03:00
+[INFO] ------------------------------------------------------------------------
+```
 
 ## Próximas versões:
 
