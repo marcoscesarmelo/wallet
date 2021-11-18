@@ -214,12 +214,16 @@ De maneira assíncrona, cada transação feita é incluída em uma fila (publish
 Por isto, além da API, se fez tão importante o serviço batch para gerar insumos à timeline.
 
 # Alguns Testes Integrados:
-Utilizando-se de um framework nativo para o Spring, o MockMVC, foram desenvolvidos três cenários (2 positivos e 1 negativo). \
+Utilizando-se de um framework nativo para o Spring, o MockMVC, foram desenvolvidos três cenários (2 positivos e 1 negativo). 
+- Criação de Conta (positivo). 
+- Consulta à Timeline (positivo). 
+- Pagamento para Conta inexistente (negativo). 
+
 Para invocar, por exemplo, via Maven, no diretório raíz do projeto wallet:
 ```DOS
 mvnw clean test
 ```
-Espera-se um resultado parecido com o abaixo: \
+Espera-se um resultado parecido com o abaixo: 
 ```DOS
 [INFO]
 [INFO] Results:
@@ -233,6 +237,7 @@ Espera-se um resultado parecido com o abaixo: \
 [INFO] Finished at: 2021-11-18T13:33:37-03:00
 [INFO] ------------------------------------------------------------------------
 ```
+Obs: detalhes de suas implementações estão no código.
 
 ## Próximas versões:
 
