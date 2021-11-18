@@ -244,6 +244,13 @@ Espera-se um resultado parecido com o abaixo:
 Obs: detalhes de suas implementações estão no código.
 
 ## Próximas versões:
+Conforme mostrado acima, o serviço foi desenvolvido para ser testado inicialmente no ambiente local.
+O intuito de uma nova versão é a inclusão dos mesmos em um container Docker.
+Inclusive na solução constam arquivos: 
+- Dockerfile
+- docker-compose.yml
+
+Como um início de configuração.
 
 ## Sobre o Autor:
 [Marcos Cesar de Oliveira Melo](https://www.linkedin.com/in/marcoscesarmelo/)
