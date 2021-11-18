@@ -30,7 +30,7 @@ Conceitualmente, as entidades mapeadas foram dispostas da seguinte maneira na so
 <img src="https://github.com/marcoscesarmelo/wallet/blob/main/uml-class.PNG"/>
 
 # Como foi feito?
-O Wallet Service possui uma API Restful, elaborada utilizando Java 11 e Spring Boot + Spring Data e Spring Security, com comunicação via mensagens (RabbitMQ) além de um BD relacional MySQL. Além da API, também há um outro micro serviço, que utiliza as mesmas tecnologia, mas se faz uso de Bibliotecas de Scheduling, para popular de forma assíncrona, uma linha do tempo com as transações realizadas.
+O Wallet Service possui uma API Restful, elaborada utilizando Java 11 e Spring Boot + Spring Data e Spring Security, com comunicação via mensagens (RabbitMQ) além de um BD relacional MySQL. Além da API, também há um outro micro serviço, que utiliza as mesmas tecnologias, mas se faz uso de Bibliotecas de Scheduling, para popular de forma assíncrona, uma linha do tempo com as transações realizadas.
 
 ### O que eu preciso para executar localmente em minha estação de trabalho?
 * [Java 11](http://jdk.java.net/java-se-ri/11) Java JDK 
@@ -48,7 +48,7 @@ A imagem abaixo mostra um esboço de arquitetura, mostrando como os serviços es
 
 ## Instruções para uso local:
 
-1. Certifique-se que o MySQL está devidamente instalado (a versão utilizada foi a 8.0) instalado. Ao iniciar o Wallet Service, o Banco de Dados walletdb será criado, bem como suas tabelas (DDL). Ao término desta etapa, o banco de dados já estará OK para uso!.
+1. Certifique-se que o MySQL está devidamente instalado (a versão utilizada foi a 8.0). Ao iniciar o Wallet Service, o Banco de Dados walletdb será criado, bem como suas tabelas (DDL). Ao término desta etapa, o banco de dados já estará OK para uso!.
 
 2. Certifique-se que o RabbitMQ está instalado corretamente em sua estação. Pode-se acessar o [RabbitMQ Console](http://localhost:15672/) local (credenciais de convidado <strong>"guest:guest"</strong>) e verificar o gerenciamento das filas criadas.
 
@@ -56,7 +56,7 @@ A imagem abaixo mostra um esboço de arquitetura, mostrando como os serviços es
 - wallet 
 - timeline
 
-Obs: as versões mencionadas no arquivo pom.xml estão como 0.0.1-SNAPSHOT por ser um draft
+Obs: as versões mencionadas no arquivo pom.xml estão como 0.0.1-SNAPSHOT por ser um draft \
 Para cada um dos dois projetos, navegue até a pasta raíz do mesmo e execute comando:
 
 ```DOS
@@ -67,6 +67,155 @@ java -jar timeline-0.0.1-SNAPSHOT.jar
 ```
 4. Feito isto, os serviços estarão rodando. Agora basta acessar ao Postman e criar as chamadas para a API
 
+
+### O que a API me disponibiliza?
+Segue a lista dos principais Serviços e exemplos de resultados:
+
+## Registar - Incluir uma conta:
+(*) POST na URL http://localhost:8080/register \
+Exemplo de Body:
+```json
+{
+"username":"greenlight",
+"password":"redlight"
+}
+```
+Parâmetros de Header: 
+Content-Type: application/json 
+
+Exemplo de Resposta: 
+```json
+{
+    "username": "greenlight",
+    "accountId": 3
+}
+```
+
+## Autenticar - Efetuar Login:
+(*) POST na URL http://localhost:8080/authenticate \
+Exemplo de Body:
+```json
+{
+"username":"greenlight",
+"password":"redlight"
+}
+```
+Parâmetros de Header: 
+Content-Type: application/json 
+
+Exemplo de Resposta: 
+```json
+{
+    "token": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJncmVlbmxpZ2h0IiwiZXhwIjoxNjM3MjY1NDI4LCJpYXQiOjE2MzcyNDc0Mjh9.UuqEYDVGKr-H5gusB18J86RcK3ut1Pcwz-JXMLtr2fvxkKHWcsecP0Ilqu7IkhNJq8CQVXe3MKUpKDISHfVrng"
+}
+```
+-Obs.: O token passado se refere a um usuário autenticado. Os demais serviços listados abaixo, precisarão inicialmente deste token para garantir usuário logado.
+
+## Deposit - Depositar em Conta:
+(*) PUT na URL localhost:8080/account/deposit/{id-conta} \
+Parâmetros de Header: \
+Content-Type: application/json \
+amount: {valor numerico} \
+Authorization: "Bearer " + &lt;token&gt; \
+Exemplo de Resposta: 
+```json
+{
+    "id": 3,
+    "amount": 1000.0
+}
+```
+
+## Withdraw - Saque em Conta:
+(*) PUT na URL localhost:8080/account/withdwaw/{id-conta} \
+Parâmetros de Header: \
+Content-Type: application/json \
+amount: {valor numerico} \
+Authorization: "Bearer " + &lt;token&gt; \
+Exemplo de Resposta: 
+```json
+{
+    "id": 3,
+    "amount": 800.0
+}
+```
+
+## Payment - Pagamentos pela Conta:
+(*) PUT na URL localhost:8080/account/payment/{id-conta} \
+Parâmetros de Header: \
+Content-Type: application/json \
+amount: {valor numerico} \
+Authorization: "Bearer " + &lt;token&gt; \
+Exemplo de Resposta: 
+```json
+{
+    "id": 3,
+    "amount": 766.67
+}
+```
+
+## Transfer - Transferência de valores entre Contas:
+(*) PUT na URL localhost:8080/account/transfer/{id-conta} \
+Parâmetros de Header: \
+Content-Type: application/json \
+amount: {valor numerico} \
+destinyAccount: {Id Conta Destino} \
+Authorization: "Bearer " + &lt;token&gt; \
+Exemplo de Resposta: 
+```json
+{
+    "id": 3,
+    "amount": 466.66
+}
+```
+
+Obviamente, ambas as contas precisam estar cadastradas e a conta origem, autenticada (logada).
+
+## Timeline - Movimentações Financeiras de uma conta
+(*) GET na URL localhost:8080/operation/timeline/{id-conta} \
+Parâmetros de Header: \
+Content-Type: application/json \
+amount: {valor numerico} \
+Authorization: "Bearer " + &lt;token&gt; \
+Exemplo de Resposta: 
+```json
+[
+    {
+        "amount": 1000.0,
+        "type": "DEPOSIT",
+        "description": "Deposit into account: 3, amount: 1000.0, at: Thu Nov 18 12:00:32 BRT 2021",
+        "moment": "2021-11-18T15:00:32.542+00:00",
+        "accountId": 3
+    },
+    {
+        "amount": 200.0,
+        "type": "WITHDRAW",
+        "description": "Withdraw from account: 3, amount: 200.0, at: Thu Nov 18 12:12:33 BRT 2021",
+        "moment": "2021-11-18T15:12:33.763+00:00",
+        "accountId": 3
+    },
+    {
+        "amount": 33.33,
+        "type": "PAYMENT",
+        "description": "Debit for payment from account: 3, amount: 33.33, at: Thu Nov 18 12:13:33 BRT 2021",
+        "moment": "2021-11-18T15:13:33.554+00:00",
+        "accountId": 3
+    },
+    {
+        "amount": 300.0,
+        "type": "TRANSFER",
+        "description": "Debit for Transfer from account: 3, amount: 300.0, at: Thu Nov 18 12:14:42 BRT 2021",
+        "moment": "2021-11-18T15:14:42.032+00:00",
+        "accountId": 3
+    }
+]
+```
+
+# E o Timeline Service nesta história?
+De maneira assíncrona, cada transação feita é incluída em uma fila (publisher - serviço wallet) e há um serviço batch que obtém estas mensagens e persiste no banco de dados, para posterior consulta na endpoint /timeline.
+
+## Por isto, além da API, se fez tão importante o serviço batch para gerar insumos à timeline.
+
+## Próximas versões:
 
 ## Sobre o Autor:
 [Marcos Cesar de Oliveira Melo](https://www.linkedin.com/in/marcoscesarmelo/)
