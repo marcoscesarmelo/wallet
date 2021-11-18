@@ -65,6 +65,10 @@ java -jar wallet-0.0.1-SNAPSHOT.jar
 ```DOS
 java -jar timeline-0.0.1-SNAPSHOT.jar
 ```
+Ambos os comandos podem ser substituídos por:
+```DOS
+mvnw spring-boot:run
+```
 4. Feito isto, os serviços estarão rodando. Agora basta acessar ao Postman e criar as chamadas para a API
 
 
