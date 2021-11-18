@@ -27,7 +27,7 @@ Para sanar dívidas utilizando minha carteira digital
 ```
 Conceitualmente, as entidades mapeadas foram dispostas da seguinte maneira na solução:
 
-<img src="https://github.com/marcoscesarmelo/wallet/blob/main/uml-class.PNG"/>
+<img src="https://github.com/marcoscesarmelo/wallet/blob/main/files/uml-class.PNG"/>
 
 # Como foi feito?
 O Wallet Service possui uma API Restful, elaborada utilizando Java 11 e Spring Boot + Spring Data e Spring Security, com comunicação via mensagens (RabbitMQ) além de um BD relacional MySQL. Além da API, também há um outro micro serviço, que utiliza as mesmas tecnologias, mas se faz uso de Bibliotecas de Scheduling, para popular de forma assíncrona, uma linha do tempo com as transações realizadas.
@@ -44,7 +44,7 @@ E um PC compatível para utilizar tais ferramentas.
 
 A imagem abaixo mostra um esboço de arquitetura, mostrando como os serviços estão dispostos e algumas ferramentas utilizadas: 
 
-<img src="https://github.com/marcoscesarmelo/wallet/blob/main/arquitetura.PNG"/>
+<img src="https://github.com/marcoscesarmelo/wallet/blob/main/files/arquitetura.PNG"/>
 
 ## Instruções para uso local:
 
@@ -64,6 +64,10 @@ java -jar wallet-0.0.1-SNAPSHOT.jar
 ```
 ```DOS
 java -jar timeline-0.0.1-SNAPSHOT.jar
+```
+Ambos os comandos podem ser substituídos por:
+```DOS
+mvnw spring-boot:run
 ```
 4. Feito isto, os serviços estarão rodando. Agora basta acessar ao Postman e criar as chamadas para a API
 
@@ -174,7 +178,6 @@ Obviamente, ambas as contas precisam estar cadastradas e a conta origem, autenti
 (*) GET na URL localhost:8080/operation/timeline/{id-conta} \
 Parâmetros de Header: \
 Content-Type: application/json \
-amount: {valor numerico} \
 Authorization: "Bearer " + &lt;token&gt; \
 Exemplo de Resposta: 
 ```json
@@ -212,8 +215,33 @@ Exemplo de Resposta:
 
 # E o Timeline Service nesta história?
 De maneira assíncrona, cada transação feita é incluída em uma fila (publisher - serviço wallet) e há um serviço batch que obtém estas mensagens e persiste no banco de dados, para posterior consulta na endpoint /timeline.
+Por isto, além da API, se fez tão importante o serviço batch para gerar insumos à timeline.
 
-## Por isto, além da API, se fez tão importante o serviço batch para gerar insumos à timeline.
+# Alguns Testes Integrados:
+Utilizando-se de um framework nativo para o Spring, o MockMVC, foram desenvolvidos três cenários (2 positivos e 1 negativo). 
+- Criação de Conta (positivo). 
+- Consulta à Timeline (positivo). 
+- Pagamento para Conta inexistente (negativo). 
+
+Para invocar, por exemplo, via Maven, no diretório raíz do projeto wallet:
+```DOS
+mvnw clean test
+```
+Espera-se um resultado parecido com o abaixo: 
+```DOS
+[INFO]
+[INFO] Results:
+[INFO]
+[INFO] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0
+[INFO]
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD SUCCESS
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time:  51.621 s
+[INFO] Finished at: 2021-11-18T13:33:37-03:00
+[INFO] ------------------------------------------------------------------------
+```
+Obs: detalhes de suas implementações estão no código.
 
 ## Próximas versões:
 
