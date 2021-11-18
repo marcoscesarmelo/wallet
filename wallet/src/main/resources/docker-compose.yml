@@ -1,0 +1,28 @@
+services:
+  rabbitmq-containerr:
+    image: rabbitmq:3-management
+    ports:
+      - 5672:5672
+      - 15672:15672
+
+  walletdb-container:
+    image: walletdb
+    ports:
+      - 3306:3306
+    environment:
+      - MYSQL_ROOT_PASSWORD=12345678
+
+  app-container:
+    build:
+      context: ../../../../../
+      dockerfile: ./src/main/resources/Dockerfile
+    ports:
+      - 8085:8085
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:mysql://walletdb-container:3306/message?useSSL=false&allowPublicKeyRetrieval=true
+      - SPRING_DATASOURCE_USERNAME=root
+      - SPRING_DATASOURCE_PASSWORD=12345678
+      - SPRING_RABBITMQ_HOST=rabbitmq-container
+    depends_on:
+      - rabbitmq-container
+      - walletdb-container

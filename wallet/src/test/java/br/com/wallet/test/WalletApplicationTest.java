@@ -61,7 +61,7 @@ public class WalletApplicationTest extends AbstractTestNGSpringContextTests {
 	@Test
 	public void paymentAccountNotFound() throws Exception {
 		MvcResult result = mockMvc
-				.perform(put("/payment/1")
+				.perform(put("/payment/0")
 				.header(HttpHeaders.AUTHORIZATION, basicToken)
 				.header("amount", 100)
 				.contentType(MediaType.APPLICATION_JSON_VALUE).accept(MediaType.APPLICATION_JSON))
