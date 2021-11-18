@@ -27,7 +27,7 @@ Para sanar dívidas utilizando minha carteira digital
 ```
 Conceitualmente, as entidades mapeadas foram dispostas da seguinte maneira na solução:
 
-<img src="https://github.com/marcoscesarmelo/wallet/blob/main/uml-class.PNG"/>
+<img src="https://github.com/marcoscesarmelo/wallet/blob/main/files/uml-class.PNG"/>
 
 # Como foi feito?
 O Wallet Service possui uma API Restful, elaborada utilizando Java 11 e Spring Boot + Spring Data e Spring Security, com comunicação via mensagens (RabbitMQ) além de um BD relacional MySQL. Além da API, também há um outro micro serviço, que utiliza as mesmas tecnologias, mas se faz uso de Bibliotecas de Scheduling, para popular de forma assíncrona, uma linha do tempo com as transações realizadas.
@@ -44,7 +44,7 @@ E um PC compatível para utilizar tais ferramentas.
 
 A imagem abaixo mostra um esboço de arquitetura, mostrando como os serviços estão dispostos e algumas ferramentas utilizadas: 
 
-<img src="https://github.com/marcoscesarmelo/wallet/blob/main/arquitetura.PNG"/>
+<img src="https://github.com/marcoscesarmelo/wallet/blob/main/files/arquitetura.PNG"/>
 
 ## Instruções para uso local:
 
